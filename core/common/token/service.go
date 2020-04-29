@@ -17,7 +17,7 @@ const RedisAccessTokenKey = "work:wechat:access:token"
 
 type Service interface {
 	Get() (string, error)
-	Delete() error
+	Delete(oldToken string) error
 }
 
 type service struct {
@@ -74,9 +74,14 @@ func (s *service) Get() (string, error) {
 	return token, nil
 }
 
-func (s *service) Delete() error {
+func (s *service) Delete(oldToken string) error {
 	s.Lock()
 	defer s.Unlock()
 
-	return s.Cache.Del(RedisAccessTokenKey).Err()
+	token := s.Cache.Get(RedisAccessTokenKey).Val()
+	if token == oldToken {
+		return s.Cache.Del(RedisAccessTokenKey).Err()
+	}
+
+	return nil
 }
