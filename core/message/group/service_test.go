@@ -10,7 +10,7 @@ var chatId string
 
 func TestMain(m *testing.M) {
 	token = "1kgise5YIImoXSdL8Ozw0Sc4-9vOgXx5w5Tw_-Isr37nTRy7EpCxxSxLA4Pj0igqxtE8hY3Lze9QLfXlvfm8yGJ-L_ZVtXIsZl7FkhPUWQ_taLoEImEQ9x_HyU5RaHtbfwoykRKSM5w7Zm0FRVbdRvUsJWsYNsVSx6dZ2VuJcfQ_PHJIprZ58eK-lTu0A1ETAbj5DqAiD5WTLV8KuNAypg"
-	chatId = "wrp7CLCQAASEylJD032d3f-U0E5DAERA"
+	chatId = "wrp7CLCQAALDZ4gfjm54di5gtmvt81LA"
 	runTests := m.Run()
 	os.Exit(runTests)
 }
@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 func Test_service_CreateChat(t *testing.T) {
 	service := NewService(0)
 
-	t.Log(service.CreateChat(token, []string{"wangmingfeng", "duoduomashineisheji"}, "", "", ""))
+	t.Log(service.CreateChat(token, []string{"wangmingfeng", "duoduomashineisheji"}, "", "wangmingfeng", ""))
 }
 
 func Test_service_GetChat(t *testing.T) {
@@ -86,21 +86,19 @@ func Test_service_SendMpNews(t *testing.T) {
 func Test_service_SendMarkdown(t *testing.T) {
 	service := NewService(0)
 
-	context := `
-	您的会议室已经预定，稍后会同步到邮箱
+	context := `您的会议室已经预定，稍后会同步到邮箱
                 >**事项详情** 
-                >事　项：<font color=\"info\">开会</font> 
+                >事　项：<font color="info">开会</font> 
                 >组织者：@miglioguan 
                 >参与者：@miglioguan、@kunliu、@jamdeezhou、@kanexiong、@kisonwang 
                 > 
-                >会议室：<font color=\"info\">广州TIT 1楼 301</font> 
-                >日　期：<font color=\"warning\">2018年5月18日</font> 
-                >时　间：<font color=\"comment\">上午9:00-11:00</font> 
+                >会议室：<font color="info">广州TIT 1楼 301</font> 
+                >日　期：<font color="warning">2018年5月18日</font> 
+                >时　间：<font color="comment">上午9:00-11:00</font> 
                 > 
                 >请准时参加会议。 
                 > 
-				>如需修改会议信息，请点击：[修改会议信息](https://work.weixin.qq.com)
-				`
+				>如需修改会议信息，请点击：[修改会议信息](https://work.weixin.qq.com)`
 
 	t.Log(service.SendMarkDown(token,
 		chatId, context))
