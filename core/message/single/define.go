@@ -1,5 +1,38 @@
 package single
 
+type Options struct {
+	Safe                   int
+	EnableIdTrans          int
+	EnableDuplicateCheck   int
+	DuplicateCheckInterval int
+}
+
+type OptionFunc func(options *Options)
+
+func WithOptionSafe(safe int) OptionFunc {
+	return func(options *Options) {
+		options.Safe = safe
+	}
+}
+
+func WithOptionEnableIdTrans(enableIdTrans int) OptionFunc {
+	return func(options *Options) {
+		options.EnableIdTrans = enableIdTrans
+	}
+}
+
+func WithOptionEnableDuplicateCheck(enableDuplicateCheck int) OptionFunc {
+	return func(options *Options) {
+		options.EnableDuplicateCheck = enableDuplicateCheck
+	}
+}
+
+func WithOptionDuplicateCheckInterval(duplicateCheckInterval int) OptionFunc {
+	return func(options *Options) {
+		options.DuplicateCheckInterval = duplicateCheckInterval
+	}
+}
+
 type MessageResp struct {
 	ErrCode      int    `json:"errcode"`
 	ErrMsg       string `json:"errmsg"`

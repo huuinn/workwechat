@@ -9,11 +9,11 @@ import (
 )
 
 type Service interface {
-	SendText(token, toUser, toParty, toTag, context string) (*MessageResp, error)
-	SendImage(token, toUser, toParty, toTag, mediaId string) (*MessageResp, error)
-	SendVoice(token, toUser, toParty, toTag, mediaId string) (*MessageResp, error)
-	SendVideo(token, toUser, toParty, toTag, mediaId, title, description string) (*MessageResp, error)
-	SendFile(token, toUser, toParty, toTag, mediaId string) (*MessageResp, error)
+	SendText(token, toUser, toParty, toTag, context string, opts ...OptionFunc) (*MessageResp, error)
+	SendImage(token, toUser, toParty, toTag, mediaId string, opts ...OptionFunc) (*MessageResp, error)
+	SendVoice(token, toUser, toParty, toTag, mediaId string, opts ...OptionFunc) (*MessageResp, error)
+	SendVideo(token, toUser, toParty, toTag, mediaId, title, description string, opts ...OptionFunc) (*MessageResp, error)
+	SendFile(token, toUser, toParty, toTag, mediaId string, opts ...OptionFunc) (*MessageResp, error)
 }
 
 type service struct {
@@ -38,7 +38,21 @@ func _GetUrl(token string) string {
 	return fmt.Sprintf("https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s", token)
 }
 
-func (s *service) SendText(token, toUser, toParty, toTag, context string) (*MessageResp, error) {
+func (s *service) GetDefaultOption() *Options {
+	return &Options{
+		Safe:                   s.Safe,
+		EnableIdTrans:          s.EnableIdTrans,
+		EnableDuplicateCheck:   s.EnableDuplicateCheck,
+		DuplicateCheckInterval: s.DuplicateCheckInterval,
+	}
+}
+
+func (s *service) SendText(token, toUser, toParty, toTag, context string, opts ...OptionFunc) (*MessageResp, error) {
+	defaultOptions := s.GetDefaultOption()
+	for _, o := range opts {
+		o(defaultOptions)
+	}
+
 	url := _GetUrl(token)
 
 	body := TextMessage{}
@@ -47,10 +61,10 @@ func (s *service) SendText(token, toUser, toParty, toTag, context string) (*Mess
 	body.ToTag = toTag
 	body.MsgType = "text"
 	body.AgentId = s.AgentId
-	body.Safe = s.Safe
-	body.EnableIdTrans = s.EnableIdTrans
-	body.EnableDuplicateCheck = s.EnableDuplicateCheck
-	body.DuplicateCheckInterval = s.DuplicateCheckInterval
+	body.Safe = defaultOptions.Safe
+	body.EnableIdTrans = defaultOptions.EnableIdTrans
+	body.EnableDuplicateCheck = defaultOptions.EnableDuplicateCheck
+	body.DuplicateCheckInterval = defaultOptions.DuplicateCheckInterval
 	body.Text.Content = context
 
 	resp, err := _PostRequest(url, body)
@@ -62,7 +76,12 @@ func (s *service) SendText(token, toUser, toParty, toTag, context string) (*Mess
 	return resp, nil
 }
 
-func (s *service) SendImage(token, toUser, toParty, toTag, mediaId string) (*MessageResp, error) {
+func (s *service) SendImage(token, toUser, toParty, toTag, mediaId string, opts ...OptionFunc) (*MessageResp, error) {
+	defaultOptions := s.GetDefaultOption()
+	for _, o := range opts {
+		o(defaultOptions)
+	}
+
 	url := _GetUrl(token)
 
 	body := ImageMessage{}
@@ -71,10 +90,10 @@ func (s *service) SendImage(token, toUser, toParty, toTag, mediaId string) (*Mes
 	body.ToTag = toTag
 	body.MsgType = "image"
 	body.AgentId = s.AgentId
-	body.Safe = s.Safe
-	body.EnableIdTrans = s.EnableIdTrans
-	body.EnableDuplicateCheck = s.EnableDuplicateCheck
-	body.DuplicateCheckInterval = s.DuplicateCheckInterval
+	body.Safe = defaultOptions.Safe
+	body.EnableIdTrans = defaultOptions.EnableIdTrans
+	body.EnableDuplicateCheck = defaultOptions.EnableDuplicateCheck
+	body.DuplicateCheckInterval = defaultOptions.DuplicateCheckInterval
 	body.Image.MediaId = mediaId
 
 	resp, err := _PostRequest(url, body)
@@ -86,7 +105,12 @@ func (s *service) SendImage(token, toUser, toParty, toTag, mediaId string) (*Mes
 	return resp, nil
 }
 
-func (s *service) SendVoice(token, toUser, toParty, toTag, mediaId string) (*MessageResp, error) {
+func (s *service) SendVoice(token, toUser, toParty, toTag, mediaId string, opts ...OptionFunc) (*MessageResp, error) {
+	defaultOptions := s.GetDefaultOption()
+	for _, o := range opts {
+		o(defaultOptions)
+	}
+
 	url := _GetUrl(token)
 
 	body := VoiceMessage{}
@@ -95,10 +119,10 @@ func (s *service) SendVoice(token, toUser, toParty, toTag, mediaId string) (*Mes
 	body.ToTag = toTag
 	body.MsgType = "voice"
 	body.AgentId = s.AgentId
-	body.Safe = s.Safe
-	body.EnableIdTrans = s.EnableIdTrans
-	body.EnableDuplicateCheck = s.EnableDuplicateCheck
-	body.DuplicateCheckInterval = s.DuplicateCheckInterval
+	body.Safe = defaultOptions.Safe
+	body.EnableIdTrans = defaultOptions.EnableIdTrans
+	body.EnableDuplicateCheck = defaultOptions.EnableDuplicateCheck
+	body.DuplicateCheckInterval = defaultOptions.DuplicateCheckInterval
 	body.Voice.MediaId = mediaId
 
 	resp, err := _PostRequest(url, body)
@@ -110,7 +134,12 @@ func (s *service) SendVoice(token, toUser, toParty, toTag, mediaId string) (*Mes
 	return resp, nil
 }
 
-func (s *service) SendVideo(token, toUser, toParty, toTag, mediaId, title, description string) (*MessageResp, error) {
+func (s *service) SendVideo(token, toUser, toParty, toTag, mediaId, title, description string, opts ...OptionFunc) (*MessageResp, error) {
+	defaultOptions := s.GetDefaultOption()
+	for _, o := range opts {
+		o(defaultOptions)
+	}
+
 	url := _GetUrl(token)
 
 	body := VideoMessage{}
@@ -119,10 +148,10 @@ func (s *service) SendVideo(token, toUser, toParty, toTag, mediaId, title, descr
 	body.ToTag = toTag
 	body.MsgType = "video"
 	body.AgentId = s.AgentId
-	body.Safe = s.Safe
-	body.EnableIdTrans = s.EnableIdTrans
-	body.EnableDuplicateCheck = s.EnableDuplicateCheck
-	body.DuplicateCheckInterval = s.DuplicateCheckInterval
+	body.Safe = defaultOptions.Safe
+	body.EnableIdTrans = defaultOptions.EnableIdTrans
+	body.EnableDuplicateCheck = defaultOptions.EnableDuplicateCheck
+	body.DuplicateCheckInterval = defaultOptions.DuplicateCheckInterval
 	body.Video.MediaId = mediaId
 	body.Video.Title = title
 	body.Video.Description = description
@@ -136,7 +165,12 @@ func (s *service) SendVideo(token, toUser, toParty, toTag, mediaId, title, descr
 	return resp, nil
 }
 
-func (s *service) SendFile(token, toUser, toParty, toTag, mediaId string) (*MessageResp, error) {
+func (s *service) SendFile(token, toUser, toParty, toTag, mediaId string, opts ...OptionFunc) (*MessageResp, error) {
+	defaultOptions := s.GetDefaultOption()
+	for _, o := range opts {
+		o(defaultOptions)
+	}
+
 	url := _GetUrl(token)
 
 	body := FileMessage{}
@@ -145,10 +179,10 @@ func (s *service) SendFile(token, toUser, toParty, toTag, mediaId string) (*Mess
 	body.ToTag = toTag
 	body.MsgType = "file"
 	body.AgentId = s.AgentId
-	body.Safe = s.Safe
-	body.EnableIdTrans = s.EnableIdTrans
-	body.EnableDuplicateCheck = s.EnableDuplicateCheck
-	body.DuplicateCheckInterval = s.DuplicateCheckInterval
+	body.Safe = defaultOptions.Safe
+	body.EnableIdTrans = defaultOptions.EnableIdTrans
+	body.EnableDuplicateCheck = defaultOptions.EnableDuplicateCheck
+	body.DuplicateCheckInterval = defaultOptions.DuplicateCheckInterval
 	body.File.MediaId = mediaId
 
 	resp, err := _PostRequest(url, body)
