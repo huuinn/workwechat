@@ -27,5 +27,5 @@ func Test_service_Delete(t *testing.T) {
 
 	service := NewService("", "", client)
 
-	t.Log(service.Delete())
+	t.Log(service.Delete(""))
 }
