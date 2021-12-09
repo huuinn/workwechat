@@ -21,7 +21,6 @@ type Config struct {
 type Client struct {
 	config        *Config
 	Cache         *redis.Client
-	accessToken   string
 	tokenService  token.Service
 	uploadService upload.Service
 	singleService single.Service
@@ -44,16 +43,12 @@ func (c *Client) TokenService() token.Service {
 }
 
 func (c *Client) GetAccessToken() string {
-	if c.accessToken == "" {
-		accessToken, err := c.TokenService().Get()
-		if err != nil {
-			panic("get access token error!!!")
-		}
-
-		c.accessToken = accessToken
+	accessToken, err := c.TokenService().Get()
+	if err != nil {
+		panic("get access token error!!!")
 	}
 
-	return c.accessToken
+	return accessToken
 }
 
 func (c *Client) DeleteAccessToken(oldToken string) error {
